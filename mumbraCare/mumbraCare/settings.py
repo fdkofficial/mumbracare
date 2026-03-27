@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_filters',
-    'drf_yasg',
+    'drf_spectacular',
     # Local
     'healthcare',
 ]
@@ -113,6 +113,15 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8100',
 ]
+
+# ── drf-spectacular (OpenAPI 3.0 docs) ───────────────────────────────────────
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Mumbra Care API',
+    'DESCRIPTION': 'Real-time healthcare data API for Mumbra community',
+    'VERSION': 'v1',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CONTACT': {'email': 'admin@mumbra.care'},
+}
 
 # Timezone for IST
 TIME_ZONE = 'Asia/Kolkata'

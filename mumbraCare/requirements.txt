@@ -5,7 +5,7 @@ python-decouple==3.8
 psycopg2-binary==2.9.9
 Pillow==10.1.0
 django-filter==23.5
-drf-yasg==1.21.7
+drf-spectacular==0.28.0
 # Phase 3 — WhatsApp integration & performance
 twilio==9.3.7
 django-cacheops==7.0.2
