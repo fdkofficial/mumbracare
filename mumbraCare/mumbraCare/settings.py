@@ -21,7 +21,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-9$#z5v@p0$a($++(h%tii
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,51.20.91.145', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -108,11 +108,11 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-# CORS — allow Vue dev server during development
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:8100',
-]
+# CORS — allow all server during development
+ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOWED_ORIGINS = ["*"]
+
 
 # ── drf-spectacular (OpenAPI 3.0 docs) ───────────────────────────────────────
 SPECTACULAR_SETTINGS = {
