@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">mumbra-care-frontend</string>
+    <string name="title_activity_main">mumbra-care-frontend</string>
+    <string name="package_name">mumbra.care.frontend</string>
+    <string name="custom_url_scheme">mumbra.care.frontend</string>
+</resources>

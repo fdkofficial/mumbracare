@@ -1,0 +1,91 @@
+{
+  "app": {
+    "name": "Mumbra Care",
+    "tagline": "Your community health companion"
+  },
+  "nav": {
+    "home": "Home",
+    "beds": "Beds",
+    "doctors": "Doctors",
+    "pharmacies": "Pharmacy"
+  },
+  "home": {
+    "hero_title": "Mumbra Care",
+    "hero_subtitle": "Real-time healthcare — Kausa · Amrut Nagar · Station Road",
+    "emergency_tip": "During an emergency, use the WhatsApp button for instant help.",
+    "bed_tracker": "Live Bed Tracker",
+    "bed_tracker_desc": "See which hospitals have beds right now",
+    "doctors": "Find a Doctor",
+    "doctors_desc": "Specialists & GPs — see if they're in",
+    "pharmacies": "Night Pharmacies",
+    "pharmacies_desc": "Medical stores open late for you",
+    "whatsapp_help": "WhatsApp Help",
+    "whatsapp_desc": "Get instant help — no app needed"
+  },
+  "beds": {
+    "title": "Live Bed Tracker",
+    "subtitle": "Green = ready to admit patients",
+    "available": "Available",
+    "low": "Low",
+    "full": "Full",
+    "icu": "ICU",
+    "general": "General",
+    "last_updated": "Updated",
+    "no_data": "No facilities found for this area.",
+    "pull_refresh": "Pull down to refresh",
+    "beds_left": "{n} beds left",
+    "no_beds": "No beds",
+    "summary_available": "{n} facilities with beds",
+    "summary_full": "{n} full"
+  },
+  "doctors": {
+    "title": "Specialist Finder",
+    "subtitle": "Is your doctor in today?",
+    "in_clinic": "In Clinic",
+    "away": "Away",
+    "search": "Search by doctor name…",
+    "all_specialties": "All Specialties",
+    "call": "Call",
+    "no_data": "No doctors found.",
+    "timing": "Timings"
+  },
+  "pharmacies": {
+    "title": "Pharmacy Directory",
+    "subtitle": "Night & 24 / 7 stores near you",
+    "open_24": "Open 24 / 7",
+    "night_only": "Night stores only",
+    "call": "Call",
+    "no_data": "No pharmacies found.",
+    "hours": "Hours"
+  },
+  "area": {
+    "ALL": "All Areas",
+    "KAUSA": "Kausa",
+    "AMRUT_NAGAR": "Amrut Nagar",
+    "STATION_ROAD": "Station Road"
+  },
+  "specialty": {
+    "ALL": "All Specialties",
+    "GENERAL": "General Physician",
+    "CARDIAC": "Cardiac Expert",
+    "PEDIATRIC": "Pediatrician",
+    "GYNAE": "Gynaecologist",
+    "ORTHO": "Orthopaedic",
+    "DERM": "Dermatologist",
+    "ENT": "ENT Specialist"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "close": "Close",
+    "verified": "Verified",
+    "hospital": "Hospital",
+    "clinic": "Clinic",
+    "dark_mode": "Dark Mode",
+    "language": "Language"
+  },
+  "whatsapp": {
+    "fab_label": "WhatsApp Help",
+    "default_message": "Hello! I need help finding healthcare in Mumbra."
+  }
+}
