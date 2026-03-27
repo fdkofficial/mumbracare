@@ -1,5 +1,5 @@
 # Angular specific
-frontend/dist/
+dist/
 /out-tsc/
 /tmp/
 /coverage/
@@ -8,7 +8,7 @@ frontend/dist/
 .angular/
 
 # Node modules and dependency files
-frontend/node_modules/
+node_modules/
 /package-lock.json
 /yarn.lock
 
