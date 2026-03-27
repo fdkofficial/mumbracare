@@ -1,0 +1,31 @@
+{
+  "name": "mumbra-care-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.3.0",
+    "@capacitor/app": "8.1.0",
+    "@capacitor/cli": "8.3.0",
+    "@capacitor/core": "8.3.0",
+    "@capacitor/haptics": "8.0.1",
+    "@capacitor/keyboard": "8.0.2",
+    "@capacitor/status-bar": "8.0.2",
+    "axios": "^1.7.9",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13",
+    "vue-i18n": "^11.3.0",
+    "vue-router": "^4.5.0",
+    "vuetify": "^3.7.6"
+  },
+  "devDependencies": {
+    "@mdi/font": "^7.4.47",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.11",
+    "vite-plugin-vuetify": "^2.1.0"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Mumbra Care",
+  "short_name": "Mumbra Care",
+  "description": "Real-time hospital beds, doctors and pharmacies in Mumbra",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#00695C",
+  "theme_color": "#00695C",
+  "orientation": "portrait",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Bed Tracker",
+      "short_name": "Beds",
+      "description": "Check live bed availability",
+      "url": "/beds",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Find Doctor",
+      "short_name": "Doctors",
+      "description": "Is the doctor in today?",
+      "url": "/doctors",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pharmacies",
+      "short_name": "Pharmacy",
+      "description": "Night pharmacies near you",
+      "url": "/pharmacies",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

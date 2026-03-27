@@ -1,0 +1,14 @@
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+python-decouple==3.8
+psycopg2-binary==2.9.9
+Pillow==10.1.0
+django-filter==23.5
+drf-spectacular==0.28.0
+# Phase 3 — WhatsApp integration & performance
+twilio==9.3.7
+django-cacheops==7.0.2
+whitenoise==6.7.0
+# Phase 4 — Portal auth
+djangorestframework-simplejwt==5.3.1
