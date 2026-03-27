@@ -108,10 +108,8 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-# CORS — allow all server during development
-ALLOW_ALL_ORIGINS = True
-
-# CORS_ALLOWED_ORIGINS = ["*"]
+# CORS — allow all origins (restrict in production by replacing with CORS_ALLOWED_ORIGINS list)
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # ── drf-spectacular (OpenAPI 3.0 docs) ───────────────────────────────────────
