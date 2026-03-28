@@ -21,7 +21,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-9$#z5v@p0$a($++(h%tii
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,51.20.91.145', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,51.20.91.145,elitevisiongmbh.de', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
