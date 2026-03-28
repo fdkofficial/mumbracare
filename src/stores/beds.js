@@ -28,7 +28,7 @@ export const useBedsStore = defineStore('beds', () => {
       facilities.value = Array.isArray(data) ? data : (data.results ?? [])
       lastRefreshed.value = new Date()
     } catch (e) {
-      error.value = e
+      error.value = `${e.message}` // print error and url
     } finally {
       loading.value = false
     }
