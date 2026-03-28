@@ -40,5 +40,5 @@ class Command(BaseCommand):
             f'   Email    : {email}\n'
             f'   Password : {password}\n\n'
             f'   ⚠️  Change this password immediately after first login!\n'
-            f'   Admin panel: http://51.20.91.145:8080/admin/'
+            f'   Admin panel: https://elitevisiongmbh.de/admin/'
         ))

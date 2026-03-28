@@ -17,7 +17,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://51.20.91.145:8080',
+        target: 'https://elitevisiongmbh.de',
         changeOrigin: true,
       },
     },
