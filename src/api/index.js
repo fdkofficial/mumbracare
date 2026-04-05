@@ -70,6 +70,9 @@ export const portalUpdateDoctor = (data) => api.patch('/portal/doctor/', data).t
 export const portalToggleDoctorStatus = (is_available) =>
   api.patch('/portal/doctor/status/', { is_available }).then(r => r.data)
 
+export const portalGetPharmacy = () => api.get('/portal/pharmacy/').then(r => r.data)
+export const portalUpdatePharmacy = (data) => api.patch('/portal/pharmacy/', data).then(r => r.data)
+
 export const adminGetUsers = () => api.get('/portal/admin/users/').then(r => r.data)
 export const adminCreateUser = (data) => api.post('/portal/admin/users/', data).then(r => r.data)
 export const adminUpdateUser = (id, data) => api.patch(`/portal/admin/users/${id}/`, data).then(r => r.data)
