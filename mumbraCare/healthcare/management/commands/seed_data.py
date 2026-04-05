@@ -1,8 +1,11 @@
 """
 Management command: seed_data
 
-Populates the database with real-world-representative healthcare facilities,
-doctors, bed statuses, and pharmacies for the Mumbra area.
+Seeds the database with publicly discoverable Mumbra healthcare data.
+
+Facility names, addresses, and contacts below were curated from official sites
+or public business directories. Bed availability and some operational fields are
+kept conservative when a live value was not publicly available.
 
 Usage:
     python manage.py seed_data            # adds records, skips if already present
@@ -16,171 +19,79 @@ from healthcare.models import BedStatus, Doctor, HealthcareFacility, Pharmacy
 
 
 FACILITIES = [
-    # ── Kausa ────────────────────────────────────────────────────────────────
     {
-        'name': 'Kausa Municipal Hospital',
+        'name': 'Freedom Fighter Hakim Ajmal Khan TMC Hospital',
         'facility_type': 'HOSPITAL',
         'area': 'KAUSA',
-        'address': 'Kausa Village Road, Mumbra, Thane - 400612',
-        'contact_number': '02225340001',
-        'whatsapp_number': '919822000001',
+        'address': 'MM Valley Road, Kausa, Mumbra, Thane, Maharashtra 400612',
+        'contact_number': '9987229960',
+        'whatsapp_number': '9987229960',
         'is_verified': True,
-        'beds': {'total_beds': 80, 'available_beds': 24, 'icu_total': 10, 'icu_available': 3},
-        'doctors': [
-            {'name': 'Arshad Khan', 'specialty': 'GENERAL', 'contact_number': '919800000001',
-             'timing_slots': {'Mon-Sat': '9:00–13:00', 'Eve': '17:00–20:00'}},
-            {'name': 'Sunita Patil', 'specialty': 'GYNAE', 'contact_number': '919800000002',
-             'timing_slots': {'Mon-Fri': '10:00–14:00'}},
-        ],
+        'beds': {'total_beds': 100, 'available_beds': 0, 'icu_total': 0, 'icu_available': 0},
+        'doctors': [],
     },
     {
-        'name': 'Al-Shifa Clinic',
-        'facility_type': 'CLINIC',
-        'area': 'KAUSA',
-        'address': 'Shop 4, Kausa Naka, Mumbra - 400612',
-        'contact_number': '02225340002',
-        'whatsapp_number': '919822000002',
-        'is_verified': True,
-        'beds': {'total_beds': 10, 'available_beds': 4, 'icu_total': 0, 'icu_available': 0},
-        'doctors': [
-            {'name': 'Mohammed Raza', 'specialty': 'PEDIATRIC', 'contact_number': '919800000003',
-             'timing_slots': {'Mon-Sun': '8:00–12:00', 'Eve': '16:00–21:00'}},
-        ],
-    },
-    {
-        'name': 'Noor Heart & Care Clinic',
-        'facility_type': 'CLINIC',
-        'area': 'KAUSA',
-        'address': 'Near Kausa Police Station, Mumbra',
-        'contact_number': '02225340003',
-        'whatsapp_number': '',
-        'is_verified': False,
-        'beds': {'total_beds': 5, 'available_beds': 2, 'icu_total': 0, 'icu_available': 0},
-        'doctors': [
-            {'name': 'Farhan Siddiqui', 'specialty': 'CARDIAC', 'contact_number': '919800000004',
-             'timing_slots': {'Mon-Sat': '11:00–15:00'}},
-        ],
-    },
-
-    # ── Amrut Nagar ──────────────────────────────────────────────────────────
-    {
-        'name': 'Mumbra General Hospital',
+        'name': 'GHC Hospitals',
         'facility_type': 'HOSPITAL',
-        'area': 'AMRUT_NAGAR',
-        'address': 'Amrut Nagar, Mumbra, Thane - 400612',
-        'contact_number': '02225341000',
-        'whatsapp_number': '919822001000',
+        'area': 'KAUSA',
+        'address': 'Thane Shil Road, Kausa, Thane, Maharashtra 400612',
+        'contact_number': '02231007444',
+        'whatsapp_number': '918104242551',
         'is_verified': True,
-        'beds': {'total_beds': 120, 'available_beds': 8, 'icu_total': 20, 'icu_available': 2},
+        'beds': {'total_beds': 140, 'available_beds': 0, 'icu_total': 24, 'icu_available': 0},
         'doctors': [
-            {'name': 'Priya Sharma', 'specialty': 'GENERAL', 'contact_number': '919800001001',
-             'timing_slots': {'Mon-Sat': '9:00–13:00', 'Eve': '18:00–21:00'}},
-            {'name': 'Dr. Ahmed Ansari', 'specialty': 'ORTHO', 'contact_number': '919800001002',
-             'timing_slots': {'Mon-Fri': '10:00–14:00'}},
-            {'name': 'Kavita Desai', 'specialty': 'PEDIATRIC', 'contact_number': '919800001003',
-             'timing_slots': {'Mon-Sun': '8:00–12:00'}},
+            {'name': 'Dr. Ram Shinde', 'specialty': 'GENERAL', 'contact_number': '', 'timing_slots': {}},
+            {'name': 'Dr. Neerja Gupta', 'specialty': 'GYNAE', 'contact_number': '', 'timing_slots': {}},
+            {'name': 'Dr. Talib Surve', 'specialty': 'PEDIATRIC', 'contact_number': '', 'timing_slots': {}},
+            {'name': 'Dr. Suheil Dhanse', 'specialty': 'CARDIAC', 'contact_number': '', 'timing_slots': {}},
+            {'name': 'Dr. Faisal Husain Bape', 'specialty': 'ORTHO', 'contact_number': '', 'timing_slots': {}},
+            {'name': 'Dr. Safa Imtyaz Patrick', 'specialty': 'DERM', 'contact_number': '', 'timing_slots': {}},
+            {'name': 'Dr. Pravin Rajgadkar', 'specialty': 'ENT', 'contact_number': '', 'timing_slots': {}},
         ],
     },
     {
-        'name': 'Amrut Nagar Polyclinic',
-        'facility_type': 'CLINIC',
-        'area': 'AMRUT_NAGAR',
-        'address': 'Plot 12, Amrut Nagar Main Road, Mumbra',
-        'contact_number': '02225341001',
-        'whatsapp_number': '',
-        'is_verified': True,
-        'beds': {'total_beds': 15, 'available_beds': 0, 'icu_total': 0, 'icu_available': 0},
-        'doctors': [
-            {'name': 'Ruksana Shaikh', 'specialty': 'DERM', 'contact_number': '919800001004',
-             'timing_slots': {'Mon-Sun': '10:00–14:00', 'Eve': '17:00–20:00'}},
-        ],
-    },
-    {
-        'name': 'Crescent ENT & Eye Hospital',
-        'facility_type': 'HOSPITAL',
-        'area': 'AMRUT_NAGAR',
-        'address': 'Crescent Road, Amrut Nagar, Mumbra',
-        'contact_number': '02225341002',
-        'whatsapp_number': '919822001002',
-        'is_verified': True,
-        'beds': {'total_beds': 30, 'available_beds': 12, 'icu_total': 4, 'icu_available': 1},
-        'doctors': [
-            {'name': 'Imran Sheikh', 'specialty': 'ENT', 'contact_number': '919800001005',
-             'timing_slots': {'Mon-Sat': '9:00–13:00', 'Eve': '18:00–21:00'}},
-        ],
-    },
-
-    # ── Station Road ─────────────────────────────────────────────────────────
-    {
-        'name': 'Mumbra Station Road Hospital',
+        'name': 'Burhani Hospital',
         'facility_type': 'HOSPITAL',
         'area': 'STATION_ROAD',
-        'address': 'Station Road, Mumbra, Thane - 400612',
-        'contact_number': '02225342000',
-        'whatsapp_number': '919822002000',
+        'address': 'Police Station, Dr Syedna Mohammed Burhanuddin Marg, near Mumbra, Zainy Colony, Mumbra, Thane, Maharashtra 400612',
+        'contact_number': '02225460115',
+        'whatsapp_number': '',
         'is_verified': True,
-        'beds': {'total_beds': 60, 'available_beds': 18, 'icu_total': 8, 'icu_available': 4},
+        'beds': {'total_beds': 20, 'available_beds': 0, 'icu_total': 3, 'icu_available': 0},
         'doctors': [
-            {'name': 'Salim Mansuri', 'specialty': 'GENERAL', 'contact_number': '919800002001',
-             'timing_slots': {'Mon-Sat': '8:00–12:00', 'Eve': '17:00–21:00'}},
-            {'name': 'Neha Kulkarni', 'specialty': 'GYNAE', 'contact_number': '919800002002',
-             'timing_slots': {'Mon-Fri': '10:00–14:00'}},
-            {'name': 'Anwar Ali', 'specialty': 'CARDIAC', 'contact_number': '919800002003',
-             'timing_slots': {'Mon-Sat': '11:00–15:00', 'Eve': '19:00–21:00'}},
-        ],
-    },
-    {
-        'name': 'Shifa Maternity & Child Clinic',
-        'facility_type': 'CLINIC',
-        'area': 'STATION_ROAD',
-        'address': 'Near Mumbra Station, Station Road, Mumbra',
-        'contact_number': '02225342001',
-        'whatsapp_number': '919822002001',
-        'is_verified': True,
-        'beds': {'total_beds': 20, 'available_beds': 6, 'icu_total': 0, 'icu_available': 0},
-        'doctors': [
-            {'name': 'Dr. Zubeda Khan', 'specialty': 'PEDIATRIC', 'contact_number': '919800002004',
-             'timing_slots': {'Mon-Sun': '9:00–21:00'}},
+            {'name': 'Dr. Firdousara Siddiqui', 'specialty': 'GYNAE', 'contact_number': '',
+             'timing_slots': {'Mon-Sat': '12:00-14:00', 'Eve': '17:00-19:00'}},
         ],
     },
 ]
 
 
 PHARMACIES = [
-    # Kausa
-    {'name': 'Al-Madina Medical', 'area': 'KAUSA',
-     'address': 'Kausa Naka, Mumbra', 'contact_number': '02225340100',
-     'is_24_7': True, 'is_verified': True},
-    {'name': 'New Life Pharma', 'area': 'KAUSA',
-     'address': 'Station Road Junction, Kausa', 'contact_number': '02225340101',
-     'is_24_7': False, 'opening_time': '08:00', 'closing_time': '23:00', 'is_verified': True},
-    {'name': 'Kausa Medical Store', 'area': 'KAUSA',
-     'address': 'Opposite Kausa Hospital', 'contact_number': '02225340102',
-     'is_24_7': False, 'opening_time': '09:00', 'closing_time': '22:00', 'is_verified': False},
-
-    # Amrut Nagar
-    {'name': 'Crescent Pharmacy', 'area': 'AMRUT_NAGAR',
-     'address': 'Amrut Nagar Main Road', 'contact_number': '02225341100',
-     'is_24_7': True, 'is_verified': True},
-    {'name': 'Rahmat Medical', 'area': 'AMRUT_NAGAR',
-     'address': 'Shop 7, Amrut Nagar Market', 'contact_number': '02225341101',
-     'is_24_7': False, 'opening_time': '08:30', 'closing_time': '23:30', 'is_verified': True},
-
-    # Station Road
-    {'name': 'Station Road Medicals', 'area': 'STATION_ROAD',
-     'address': 'Opp. Mumbra Railway Station', 'contact_number': '02225342100',
-     'is_24_7': True, 'is_verified': True},
-    {'name': 'Apollo Pharmacy Mumbra', 'area': 'STATION_ROAD',
-     'address': 'Ground Floor, Station Plaza, Mumbra', 'contact_number': '02225342101',
-     'is_24_7': True, 'is_verified': True},
-    {'name': 'Bismillah Medical Store', 'area': 'STATION_ROAD',
-     'address': 'Near Mumbra Police Station', 'contact_number': '02225342102',
-     'is_24_7': False, 'opening_time': '07:00', 'closing_time': '00:00', 'is_verified': False},
+    {
+        'name': 'Zeelab Pharmacy Medical Store',
+        'area': 'KAUSA',
+        'address': 'Pleasure Garden, Kausa Village, Mumbra, Thane, Maharashtra 400612',
+        'contact_number': '9987876714',
+        'is_24_7': False,
+        'opening_time': '09:00',
+        'closing_time': '21:00',
+        'is_verified': True,
+    },
+    {
+        'name': 'Apollo Pharmacy Mumbra',
+        'area': 'STATION_ROAD',
+        'address': 'Shop No.4, Ground Floor, Marina Building, Opp Mumbra Station, Mumbra, Thane, 400612',
+        'contact_number': '9372676466',
+        'is_24_7': False,
+        'opening_time': '07:00',
+        'closing_time': '23:00',
+        'is_verified': True,
+    },
 ]
 
 
 class Command(BaseCommand):
-    help = 'Seed the database with representative Mumbra healthcare data'
+    help = 'Seed the database with curated public Mumbra healthcare data'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -202,9 +113,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.MIGRATE_HEADING('\nSeeding healthcare facilities…'))
         facility_count = doctor_count = 0
 
-        for fdata in FACILITIES:
-            bed_data = fdata.pop('beds')
-            doctor_data = fdata.pop('doctors')
+        for seed_facility in FACILITIES:
+            fdata = {k: v for k, v in seed_facility.items() if k not in ('beds', 'doctors')}
+            bed_data = dict(seed_facility['beds'])
+            doctor_data = [dict(doctor) for doctor in seed_facility['doctors']]
 
             facility, created = HealthcareFacility.objects.get_or_create(
                 name=fdata['name'],
@@ -237,7 +149,8 @@ class Command(BaseCommand):
         self.stdout.write(self.style.MIGRATE_HEADING('\nSeeding pharmacies…'))
         pharmacy_count = 0
 
-        for pdata in PHARMACIES:
+        for seed_pharmacy in PHARMACIES:
+            pdata = dict(seed_pharmacy)
             # Convert time strings to time objects if provided
             for tf in ('opening_time', 'closing_time'):
                 raw = pdata.get(tf)
