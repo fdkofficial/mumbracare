@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import sys
 from pathlib import Path
 from decouple import config
 
@@ -17,9 +18,10 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-9$#z5v@p0$a($++(h%tiin0b=5!2=x+fw7i&h69e6b-dlg7k$8')
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-local-dev-key-change-me')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
+RUNNING_DEV_SERVER = any(arg in sys.argv for arg in {'runserver', 'test'})
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,51.20.91.145,elitevisiongmbh.de', cast=lambda v: [s.strip() for s in v.split(',')])
 
@@ -108,8 +110,15 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-# CORS — allow all origins (restrict in production by replacing with CORS_ALLOWED_ORIGINS list)
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS — permissive in local development, explicit allow-list elsewhere.
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = config(
+        'CORS_ALLOWED_ORIGINS',
+        default='http://localhost:5173,http://127.0.0.1:5173,https://elitevisiongmbh.de,http://51.20.91.145:8080',
+        cast=lambda v: [s.strip() for s in v.split(',') if s.strip()],
+    )
 
 
 # ── drf-spectacular (OpenAPI 3.0 docs) ───────────────────────────────────────
@@ -159,7 +168,24 @@ USE_TZ = True
 # Static files
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+USE_MANIFEST_STATICFILES = config(
+    'USE_MANIFEST_STATICFILES',
+    default=not (DEBUG or RUNNING_DEV_SERVER),
+    cast=bool,
+)
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': (
+            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            if USE_MANIFEST_STATICFILES
+            else 'whitenoise.storage.CompressedStaticFilesStorage'
+        ),
+    },
+}
+WHITENOISE_MANIFEST_STRICT = False
 # Media files (user-uploaded: QR images, ad banners)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

@@ -13,11 +13,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import BedStatus, Doctor, HealthcareFacility
-from .permissions import IsDoctorOwner, IsFacilityOwner, IsPortalAdmin
+from .models import Pharmacy
+from .permissions import IsDoctorOwner, IsFacilityOwner, IsPharmacyOwner, IsPortalAdmin
 from .serializers import (
     PortalBedUpdateSerializer,
     PortalDoctorSerializer,
     PortalFacilitySerializer,
+    PortalPharmacySerializer,
     PortalUserCreateSerializer,
     PortalUserSerializer,
 )
@@ -30,6 +32,8 @@ def _user_type(user):
         return 'FACILITY'
     if hasattr(user, 'doctor_profile'):
         return 'DOCTOR'
+    if hasattr(user, 'pharmacy_profile'):
+        return 'PHARMACY'
     return 'UNKNOWN'
 
 
@@ -57,6 +61,9 @@ class MeView(APIView):
         elif utype == 'DOCTOR':
             data['profile_id'] = user.doctor_profile.id
             data['profile_name'] = f"Dr. {user.doctor_profile.name}"
+        elif utype == 'PHARMACY':
+            data['profile_id'] = user.pharmacy_profile.id
+            data['profile_name'] = user.pharmacy_profile.name
         return Response(data)
 
 
@@ -126,6 +133,23 @@ class DoctorStatusPortalView(APIView):
         return Response({'is_available': doctor.is_available})
 
 
+# ─── Pharmacy portal ─────────────────────────────────────────────────────────
+
+class PharmacyPortalView(APIView):
+    """GET/PATCH /api/portal/pharmacy/ — pharmacy owner manages their pharmacy."""
+    permission_classes = [IsAuthenticated, IsPharmacyOwner]
+
+    def get(self, request):
+        return Response(PortalPharmacySerializer(request.user.pharmacy_profile).data)
+
+    def patch(self, request):
+        serializer = PortalPharmacySerializer(
+            request.user.pharmacy_profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
 # ─── Admin portal (user management) ─────────────────────────────────────────
 
 class AdminUserListView(APIView):
@@ -137,7 +161,7 @@ class AdminUserListView(APIView):
         users = (
             User.objects
             .filter(is_superuser=False)
-            .select_related('facility_profile', 'doctor_profile')
+            .select_related('facility_profile', 'doctor_profile', 'pharmacy_profile')
             .order_by('username')
         )
         return Response(PortalUserSerializer(users, many=True).data)
@@ -156,7 +180,7 @@ class AdminUserDetailView(APIView):
     def _get_user(self, pk):
         try:
             return User.objects.select_related(
-                'facility_profile', 'doctor_profile').get(pk=pk, is_superuser=False)
+                'facility_profile', 'doctor_profile', 'pharmacy_profile').get(pk=pk, is_superuser=False)
         except User.DoesNotExist:
             return None
 
@@ -172,6 +196,13 @@ class AdminUserDetailView(APIView):
             return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
         # Allow updating email, is_active, is_staff; block username changes via PATCH
         allowed = {k: v for k, v in request.data.items() if k in ('email', 'is_active', 'is_staff')}
+        profile_keys = ('link_to_facility', 'link_to_doctor', 'link_to_pharmacy')
+        link_payload = {k: request.data.get(k) for k in profile_keys if k in request.data}
+        if sum(1 for value in link_payload.values() if value not in (None, '', 0, '0')) > 1:
+            return Response(
+                {'detail': 'Cannot link a user to more than one profile type at the same time.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         # Handle password reset separately (secure)
         new_password = request.data.get('password')
         if new_password:
@@ -184,6 +215,52 @@ class AdminUserDetailView(APIView):
         serializer = PortalUserSerializer(user, data=allowed, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        if 'link_to_facility' in link_payload:
+            facility_id = link_payload['link_to_facility']
+            HealthcareFacility.objects.filter(user=user).update(user=None)
+            if facility_id not in (None, '', 0, '0'):
+                try:
+                    facility = HealthcareFacility.objects.get(pk=facility_id)
+                except HealthcareFacility.DoesNotExist:
+                    return Response({'link_to_facility': 'Facility not found.'}, status=status.HTTP_400_BAD_REQUEST)
+                if facility.user_id and facility.user_id != user.id:
+                    return Response({'link_to_facility': 'This facility already has a portal user.'}, status=status.HTTP_400_BAD_REQUEST)
+                Doctor.objects.filter(user=user).update(user=None)
+                Pharmacy.objects.filter(user=user).update(user=None)
+                facility.user = user
+                facility.save(update_fields=['user'])
+
+        if 'link_to_doctor' in link_payload:
+            doctor_id = link_payload['link_to_doctor']
+            Doctor.objects.filter(user=user).update(user=None)
+            if doctor_id not in (None, '', 0, '0'):
+                try:
+                    doctor = Doctor.objects.get(pk=doctor_id)
+                except Doctor.DoesNotExist:
+                    return Response({'link_to_doctor': 'Doctor not found.'}, status=status.HTTP_400_BAD_REQUEST)
+                if doctor.user_id and doctor.user_id != user.id:
+                    return Response({'link_to_doctor': 'This doctor already has a portal user.'}, status=status.HTTP_400_BAD_REQUEST)
+                HealthcareFacility.objects.filter(user=user).update(user=None)
+                Pharmacy.objects.filter(user=user).update(user=None)
+                doctor.user = user
+                doctor.save(update_fields=['user'])
+
+        if 'link_to_pharmacy' in link_payload:
+            pharmacy_id = link_payload['link_to_pharmacy']
+            Pharmacy.objects.filter(user=user).update(user=None)
+            if pharmacy_id not in (None, '', 0, '0'):
+                try:
+                    pharmacy = Pharmacy.objects.get(pk=pharmacy_id)
+                except Pharmacy.DoesNotExist:
+                    return Response({'link_to_pharmacy': 'Pharmacy not found.'}, status=status.HTTP_400_BAD_REQUEST)
+                if pharmacy.user_id and pharmacy.user_id != user.id:
+                    return Response({'link_to_pharmacy': 'This pharmacy already has a portal user.'}, status=status.HTTP_400_BAD_REQUEST)
+                HealthcareFacility.objects.filter(user=user).update(user=None)
+                Doctor.objects.filter(user=user).update(user=None)
+                pharmacy.user = user
+                pharmacy.save(update_fields=['user'])
+
         if new_password:
             user.save()
         return Response(PortalUserSerializer(user).data)

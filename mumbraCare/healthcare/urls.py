@@ -5,6 +5,7 @@ from .portal_views import (
     MeView,
     FacilityPortalView, FacilityBedsPortalView,
     DoctorPortalView, DoctorStatusPortalView,
+    PharmacyPortalView,
     AdminUserListView, AdminUserDetailView,
 )
 from .whatsapp_views import WhatsAppWebhookView
@@ -46,6 +47,9 @@ urlpatterns = [
     # ─── Doctor portal ────────────────────────────────────────────────────────
     path('portal/doctor/', DoctorPortalView.as_view(), name='portal-doctor'),
     path('portal/doctor/status/', DoctorStatusPortalView.as_view(), name='portal-doctor-status'),
+
+    # ─── Pharmacy portal ──────────────────────────────────────────────────────
+    path('portal/pharmacy/', PharmacyPortalView.as_view(), name='portal-pharmacy'),
 
     # ─── Admin portal ─────────────────────────────────────────────────────────
     path('portal/admin/users/', AdminUserListView.as_view(), name='portal-admin-users'),

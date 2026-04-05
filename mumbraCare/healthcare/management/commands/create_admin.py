@@ -11,6 +11,7 @@ Usage:
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from secrets import token_urlsafe
 
 
 class Command(BaseCommand):
@@ -19,13 +20,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--username', default='admin')
         parser.add_argument('--email', default='admin@mumbra.care')
-        parser.add_argument('--password', default='Mumbai@123')
+        parser.add_argument('--password')
 
     def handle(self, *args, **options):
         User = get_user_model()
         username = options['username']
         email = options['email']
-        password = options['password']
+        password = options['password'] or token_urlsafe(12)
 
         if User.objects.filter(username=username).exists():
             self.stdout.write(self.style.WARNING(
@@ -40,5 +41,5 @@ class Command(BaseCommand):
             f'   Email    : {email}\n'
             f'   Password : {password}\n\n'
             f'   ⚠️  Change this password immediately after first login!\n'
-            f'   Admin panel: https://elitevisiongmbh.de/admin/'
+            f'   Admin panel: /admin/'
         ))

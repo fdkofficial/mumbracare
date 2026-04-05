@@ -47,8 +47,14 @@ const router = createRouter({
 
 // Auth guard — redirect to login if token missing
 router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('access_token')) {
+  const hasToken = !!localStorage.getItem('access_token')
+
+  if (to.meta.requiresAuth && !hasToken) {
     return { name: 'login' }
+  }
+
+  if (to.name === 'login' && hasToken) {
+    return { name: 'portal' }
   }
 })
 

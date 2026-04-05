@@ -26,7 +26,7 @@ class HealthcareFacilityAdmin(admin.ModelAdmin):
     inlines = [BedStatusInline, DoctorInline]
     fieldsets = (
         (None, {
-            'fields': ('name', 'facility_type', 'area', 'is_verified', 'is_active'),
+            'fields': ('name', 'facility_type', 'area', 'user', 'is_verified', 'is_active'),
         }),
         ('Contact', {
             'fields': ('address', 'contact_number', 'whatsapp_number'),
@@ -49,6 +49,14 @@ class DoctorAdmin(admin.ModelAdmin):
     search_fields = ('name', 'facility__name')
     list_editable = ('is_available',)
     readonly_fields = ('last_status_update',)
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'specialty', 'facility', 'user', 'contact_number', 'is_available'),
+        }),
+        ('Schedule', {
+            'fields': ('timing_slots', 'last_status_update'),
+        }),
+    )
 
 
 @admin.register(Pharmacy)
@@ -57,6 +65,14 @@ class PharmacyAdmin(admin.ModelAdmin):
     list_filter = ('area', 'is_24_7', 'is_verified', 'is_active')
     search_fields = ('name', 'address')
     list_editable = ('is_24_7', 'is_verified', 'is_active')
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'area', 'user', 'is_24_7', 'is_verified', 'is_active'),
+        }),
+        ('Contact', {
+            'fields': ('address', 'contact_number', 'opening_time', 'closing_time'),
+        }),
+    )
 
 
 @admin.register(Advertisement)

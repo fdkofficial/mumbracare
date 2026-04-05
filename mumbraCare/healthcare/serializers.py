@@ -144,16 +144,30 @@ class PortalDoctorSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'facility', 'facility_name', 'facility_address', 'last_status_update']
 
 
+class PortalPharmacySerializer(serializers.ModelSerializer):
+    """Pharmacy portal: view + update own pharmacy profile."""
+    area_display = serializers.CharField(source='get_area_display', read_only=True)
+
+    class Meta:
+        model = Pharmacy
+        fields = [
+            'id', 'name', 'area', 'area_display', 'address', 'contact_number',
+            'is_24_7', 'opening_time', 'closing_time', 'is_verified',
+        ]
+        read_only_fields = ['id', 'area', 'area_display', 'is_verified']
+
+
 class PortalUserSerializer(serializers.ModelSerializer):
     """Admin portal: view and lightly edit any portal user."""
     user_type = serializers.SerializerMethodField()
     profile_name = serializers.SerializerMethodField()
+    profile_id = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
             'id', 'username', 'email', 'is_active', 'is_staff',
-            'user_type', 'profile_name', 'date_joined',
+            'user_type', 'profile_id', 'profile_name', 'date_joined',
         ]
         read_only_fields = ['id', 'user_type', 'profile_name', 'date_joined']
 
@@ -164,6 +178,8 @@ class PortalUserSerializer(serializers.ModelSerializer):
             return 'FACILITY'
         if hasattr(obj, 'doctor_profile'):
             return 'DOCTOR'
+        if hasattr(obj, 'pharmacy_profile'):
+            return 'PHARMACY'
         return 'STAFF'
 
     def get_profile_name(self, obj):
@@ -171,7 +187,18 @@ class PortalUserSerializer(serializers.ModelSerializer):
             return obj.facility_profile.name
         if hasattr(obj, 'doctor_profile'):
             return f"Dr. {obj.doctor_profile.name}"
+        if hasattr(obj, 'pharmacy_profile'):
+            return obj.pharmacy_profile.name
         return ''
+
+    def get_profile_id(self, obj):
+        if hasattr(obj, 'facility_profile'):
+            return obj.facility_profile.id
+        if hasattr(obj, 'doctor_profile'):
+            return obj.doctor_profile.id
+        if hasattr(obj, 'pharmacy_profile'):
+            return obj.pharmacy_profile.id
+        return None
 
 
 class PortalUserCreateSerializer(serializers.Serializer):
@@ -182,6 +209,7 @@ class PortalUserCreateSerializer(serializers.Serializer):
     is_staff = serializers.BooleanField(default=False)
     link_to_facility = serializers.IntegerField(required=False, allow_null=True)
     link_to_doctor = serializers.IntegerField(required=False, allow_null=True)
+    link_to_pharmacy = serializers.IntegerField(required=False, allow_null=True)
 
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
@@ -196,8 +224,14 @@ class PortalUserCreateSerializer(serializers.Serializer):
     def validate(self, data):
         facility_id = data.get('link_to_facility')
         doctor_id = data.get('link_to_doctor')
-        if facility_id and doctor_id:
-            raise serializers.ValidationError('Cannot link to both a facility and a doctor.')
+        pharmacy_id = data.get('link_to_pharmacy')
+        links = [value for value in (facility_id, doctor_id, pharmacy_id) if value]
+        if len(links) > 1:
+            raise serializers.ValidationError('Cannot link a user to more than one profile type.')
+        if not data.get('is_staff') and len(links) == 0:
+            raise serializers.ValidationError(
+                'Non-admin portal users must be linked to a facility, doctor, or pharmacy.'
+            )
         if facility_id:
             try:
                 facility = HealthcareFacility.objects.get(pk=facility_id)
@@ -216,13 +250,24 @@ class PortalUserCreateSerializer(serializers.Serializer):
                 data['_doctor'] = doctor
             except Doctor.DoesNotExist:
                 raise serializers.ValidationError({'link_to_doctor': 'Doctor not found.'})
+        if pharmacy_id:
+            try:
+                pharmacy = Pharmacy.objects.get(pk=pharmacy_id)
+                if pharmacy.user_id:
+                    raise serializers.ValidationError(
+                        {'link_to_pharmacy': 'This pharmacy already has a portal user.'})
+                data['_pharmacy'] = pharmacy
+            except Pharmacy.DoesNotExist:
+                raise serializers.ValidationError({'link_to_pharmacy': 'Pharmacy not found.'})
         return data
 
     def create(self, validated_data):
         facility = validated_data.pop('_facility', None)
         doctor = validated_data.pop('_doctor', None)
+        pharmacy = validated_data.pop('_pharmacy', None)
         validated_data.pop('link_to_facility', None)
         validated_data.pop('link_to_doctor', None)
+        validated_data.pop('link_to_pharmacy', None)
         password = validated_data.pop('password')
         user = User.objects.create_user(password=password, **validated_data)
         if facility:
@@ -231,4 +276,7 @@ class PortalUserCreateSerializer(serializers.Serializer):
         if doctor:
             doctor.user = user
             doctor.save(update_fields=['user'])
+        if pharmacy:
+            pharmacy.user = user
+            pharmacy.save(update_fields=['user'])
         return user

@@ -27,6 +27,19 @@ class IsDoctorOwner(BasePermission):
         )
 
 
+class IsPharmacyOwner(BasePermission):
+    """Allow access only to the portal user linked to a pharmacy profile."""
+
+    message = 'Your account is not linked to any pharmacy profile.'
+
+    def has_permission(self, request, view):
+        return (
+            request.user
+            and request.user.is_authenticated
+            and hasattr(request.user, 'pharmacy_profile')
+        )
+
+
 class IsPortalAdmin(BasePermission):
     """Allow access only to staff (admin) users."""
 

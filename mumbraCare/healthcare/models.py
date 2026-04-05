@@ -124,6 +124,14 @@ class Pharmacy(models.Model):
     closing_time = models.TimeField(null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    user = models.OneToOneField(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='pharmacy_profile',
+        help_text='Portal login user for this pharmacy',
+    )
 
     class Meta:
         verbose_name_plural = 'Pharmacies'
