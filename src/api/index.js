@@ -7,6 +7,36 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+function buildRequestUrl(config = {}) {
+  const base = config.baseURL || API_BASE_URL
+  const rawUrl = config.url || ''
+  try {
+    const url = new URL(rawUrl, base.endsWith('/') ? base : `${base}/`)
+    const params = config.params
+    if (params && typeof params === 'object') {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          url.searchParams.set(key, value)
+        }
+      })
+    }
+    return url.toString()
+  } catch {
+    return rawUrl || base
+  }
+}
+
+export function formatApiError(error, fallbackMessage = 'Request failed.') {
+  const serverMessage =
+    error?.response?.data?.detail
+    || error?.response?.data?.message
+    || error?.message
+    || fallbackMessage
+
+  const requestUrl = buildRequestUrl(error?.config)
+  return `${serverMessage} Failed URL: ${requestUrl}`
+}
+
 // Attach JWT token to every request if present
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token')

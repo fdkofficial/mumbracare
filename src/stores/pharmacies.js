@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { fetchPharmacies } from '@/api'
+import { fetchPharmacies, formatApiError } from '@/api'
 
 export const usePharmaciesStore = defineStore('pharmacies', () => {
   const pharmacies = ref([])
@@ -25,7 +25,7 @@ export const usePharmaciesStore = defineStore('pharmacies', () => {
       const data = await fetchPharmacies(params)
       pharmacies.value = Array.isArray(data) ? data : (data.results ?? [])
     } catch (e) {
-      error.value = e.message
+      error.value = formatApiError(e, 'Failed to load pharmacies.')
     } finally {
       loading.value = false
     }
