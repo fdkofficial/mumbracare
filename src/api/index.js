@@ -8,21 +8,10 @@ const api = axios.create({
 })
 
 function buildRequestUrl(config = {}) {
-  const base = config.baseURL || API_BASE_URL
-  const rawUrl = config.url || ''
   try {
-    const url = new URL(rawUrl, base.endsWith('/') ? base : `${base}/`)
-    const params = config.params
-    if (params && typeof params === 'object') {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== null && value !== undefined && value !== '') {
-          url.searchParams.set(key, value)
-        }
-      })
-    }
-    return url.toString()
+    return api.getUri({ baseURL: API_BASE_URL, ...config })
   } catch {
-    return rawUrl || base
+    return config.url || API_BASE_URL
   }
 }
 
