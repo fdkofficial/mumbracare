@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { fetchBeds } from '@/api'
+import { fetchBeds, formatApiError } from '@/api'
 
 export const useBedsStore = defineStore('beds', () => {
   const facilities = ref([])
@@ -28,7 +28,7 @@ export const useBedsStore = defineStore('beds', () => {
       facilities.value = Array.isArray(data) ? data : (data.results ?? [])
       lastRefreshed.value = new Date()
     } catch (e) {
-      error.value = `${e.message}` // print error and url
+      error.value = formatApiError(e, 'Failed to load bed availability.')
     } finally {
       loading.value = false
     }
