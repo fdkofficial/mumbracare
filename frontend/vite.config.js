@@ -17,7 +17,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://elitevisiongmbh.de',
+        target: 'https://172f43c4-8000.euw.devtunnels.ms',
         changeOrigin: true,
       },
     },
