@@ -116,7 +116,7 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = config(
         'CORS_ALLOWED_ORIGINS',
-        default='http://localhost:5173,http://127.0.0.1:5173,https://172f43c4-8000.euw.devtunnels.ms,http://51.20.91.145:8080',
+        default='http://localhost:5173,http://127.0.0.1:5173,http://localhost,http://127.0.0.1,capacitor://localhost,https://172f43c4-8000.euw.devtunnels.ms,http://51.20.91.145:8080',
         cast=lambda v: [s.strip() for s in v.split(',') if s.strip()],
     )
 
